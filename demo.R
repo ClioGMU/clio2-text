@@ -20,7 +20,7 @@ ats <- readtext("ats/*") %>% as_tibble()
 
 # Turn text into tokens
 # ------------------------------------------------------------
-doc <- ats[1, "text"]
+doc <- ats[[1, "text"]]
 
 library(tokenizers)
 library(stopwords)
