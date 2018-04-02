@@ -9,6 +9,7 @@ install.packages("quanteda")
 install.packages("tidytext")
 install.packages("readtext")
 install.packages("stm")
+devtools::install_github("bmschmidt/wordVectors")
 
 # Run these to get sample corpora
 devtools::install_github("lmullen/WPAnarratives") # WPA former slave narratives
