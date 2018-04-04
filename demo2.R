@@ -41,8 +41,8 @@ death1 <- ats_model[["death"]] %>%
   reject(ats_model[[c("illness", "sick", "disease")]])
 
 death2 <- ats_model[["death"]] %>%
-  reject(ats_model[["eternal", "resurrection", "grace", "redeemed",
-                    "redemption", "everlasting", "infinite"]])
+  reject(ats_model[[c("eternal", "resurrection", "grace", "redeemed",
+                    "redemption", "everlasting", "infinite")]])
 
 closest_to(ats_model, death1)
 closest_to(ats_model, death2)
@@ -58,8 +58,8 @@ death_sim2 <- cosineSimilarity(ats_model, death2) %>%
   rename(word = rowname, death2 = V1)
 
 sim_cf <- left_join(death_sim1, death_sim2, by ="word") %>%
-  filter(abs(death1 - death2) > 0.25)
-  # sample_n(100)
+  filter(abs(death1 - death2) > 0.25) %>%
+  sample_n(100)
 
 ggplot(sim_cf, aes(death1, death2)) +
   geom_point() +
