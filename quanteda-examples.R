@@ -55,3 +55,7 @@ topfeatures(ats_dfm_tfidf, 100)
 textstat_frequency(ats_dfm) %>% head(10)
 textplot_xray(kwic(ats, "religion"))
 textplot_xray(kwic(ats, "alcohol"))
+
+keyness <- textstat_keyness(ats_dfm, target = "101202732.nlm.nih.gov.txt")
+keyness %>% head()
+textplot_keyness(keyness)
