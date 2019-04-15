@@ -15,5 +15,8 @@ install.packages("stm")
 devtools::install_github("lmullen/WPAnarratives") # WPA former slave narratives
 devtools::install_github("lmullen/tractarian") # Tracts for the Times
 
+library(WPAnarratives)
+library(tractarian)
+
 data("wpa_narratives")
 data("tracts_for_the_times")
