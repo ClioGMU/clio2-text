@@ -2,32 +2,46 @@ library(quanteda)
 library(readtext)
 library(stringr)
 
+# Reading in texts and dealing with a corpus
 ats_df <- readtext("ats")
+ats_df
+
 ats <- corpus(ats_df)
 
 summary(ats, 10)
-texts(ats)[8]
+texts(ats)[8] %>% str_sub(1, 200)
 
-kwic(ats, "religion")
-kwic(ats, "religi*", valuetype = "glob")
-kwic(ats, "religions?", valuetype = "regex")
-
+# Tokenizing
 docs <- c(dylan = "How many roads must a man walk down, before you'll call him a man?",
           cash  = "You can run on for a long time, sooner or later God will cut you down.") %>%
   str_to_lower()
 
 tokens(docs)
 tokens(docs, remove_punct = TRUE, remove_symbols = TRUE)
-tokens(docs, ngrams = 2, remove_punct = TRUE, remove_symbols = TRUE)
-tokens(docs, ngrams = 3, remove_punct = TRUE, remove_symbols = TRUE)
-tokens(docs, ngrams = c(1, 3), skip = 2, remove_punct = TRUE, remove_symbols = TRUE)
+tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
+  tokens_ngrams(n = 2)
+tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
+  tokens_ngrams(n = 3)
+tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
+  tokens_ngrams(n = 3, skip = 1)
 
-ats_dfm <- dfm(ats, remove_punct = TRUE, remove_symbols = TRUE)
+
+# Keywords in context
+kwic(ats, "religion") %>% View()
+kwic(ats, "religi*", valuetype = "glob")
+kwic(ats, "religions?", valuetype = "regex")
+
+# Document-term matrix
+ats_dfm <- dfm(ats,
+               remove_punct = TRUE,
+               remove_symbols = TRUE)
 ats_dfm
 
 ats_dfm[1:5, 1:10]
 
-ats_dfm <- dfm(ats, remove_punct = TRUE, remove_symbols = TRUE,
+ats_dfm <- dfm(ats,
+               remove_punct = TRUE,
+               remove_symbols = TRUE,
                remove = stopwords("en"))
 
 ats_dfm[1:5, 1:10]
@@ -36,6 +50,11 @@ View(ats_dfm[, 1:100])
 
 topfeatures(ats_dfm, 20)
 
+# Term co-occurence matrix
+ats_fcm <- fcm(ats_dfm, context = "window", window = 10L, count = "frequency")
+ats_fcm
+
+# Using a dictionary
 dictionary <- dictionary(list(
   conversion = c("saved", "salvation", "conversion", "convert", "redeem"),
   sin        = c("sin", "sinful", "wicked", "rebellious", "satan"),
@@ -45,6 +64,7 @@ dictionary <- dictionary(list(
 ats_dfm_dict <- dfm(ats, dictionary = dictionary, remove_punct = TRUE, remove_symbols = TRUE)
 ats_dfm_dict
 
+# Weighting
 ats_dfm_prop <- ats_dfm %>% dfm_weight(scheme = "prop")
 ats_dfm_prop[1:5, 1:5]
 
@@ -52,6 +72,7 @@ ats_dfm_tfidf <- ats_dfm %>% dfm_tfidf()
 ats_dfm_tfidf[1:5, 1:5]
 topfeatures(ats_dfm_tfidf, 100)
 
+# Some plots
 textstat_frequency(ats_dfm) %>% head(10)
 textplot_xray(kwic(ats, "religion"))
 textplot_xray(kwic(ats, "alcohol"))
