@@ -23,7 +23,7 @@ tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
 tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
   tokens_ngrams(n = 3)
 tokens(docs, remove_punct = TRUE, remove_symbols = TRUE) %>%
-  tokens_ngrams(n = 3, skip = 1)
+  tokens_ngrams(n = 2, skip = 0:2)
 
 
 # Keywords in context
@@ -49,6 +49,10 @@ ats_dfm[1:5, 1:10]
 View(ats_dfm[, 1:100])
 
 topfeatures(ats_dfm, 20)
+
+# Trimming a DTM
+ats_dfm_trimmed <- dfm_trim(ats_dfm, min_termfreq = 10, min_docfreq = 2)
+ats_dfm_trimmed[1:5, 1:10]
 
 # Term co-occurence matrix
 ats_fcm <- fcm(ats_dfm, context = "window", window = 10L, count = "frequency")
