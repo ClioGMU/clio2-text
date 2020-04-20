@@ -9,7 +9,12 @@ library(LDAvis)
 # Read in the texts
 my_texts <- readtext("ats/*") %>%
   as_tibble() %>%
-  sample_n(3) # Remove this line to do this for all the documents, not just three.
+  # Remove the next line to get the full corpus instead of a contrived example
+  filter(doc_id %in% c("101202732.nlm.nih.gov.txt",
+                       "61730800R.nlm.nih.gov.txt",
+                       "remembermeorholy00palm.txt",
+                       "pts_caltoprayer_1753_21.txt",
+                       "dayofnationalpra00clea.txt"))
 
 # Create the corpus
 my_corpus <- corpus(my_texts)
@@ -33,7 +38,7 @@ summary(topic_model)
 labelTopics(topic_model, n = 20)
 
 # Get the documents
-findThoughts(topic_model, texts = docnames(my_corpus))
+findThoughts(topic_model, texts = docnames(my_dfm))
 
 # Plot it
 plot(topic_model)
